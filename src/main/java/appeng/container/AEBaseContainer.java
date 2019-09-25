@@ -78,6 +78,33 @@ import appeng.util.inv.AdaptorItemHandler;
 import appeng.util.inv.WrapperCursorItemHandler;
 import appeng.util.item.AEItemStack;
 
+import java.util.HashMap;
+import java.util.Map;
+
+class ClickLimitor {
+	private Map<EntityPlayerMP, Integer> clickCnt = new HashMap<>();
+	private Map<EntityPlayerMP, Long> lastClickTime = new HashMap<>();
+
+	public ClickLimitor() {
+
+	}
+
+	public Boolean tryDoClick(EntityPlayerMP player) {
+		long lastTime = lastClickTime.get(player);
+		int cnt = clickCnt.get(player);
+		long timeNow = System.currentTimeMillis();
+		if (timeNow - lastTime > 5000) {
+			lastClickTime.put(player, timeNow);
+			cnt = 0;
+		}
+		if (cnt > 20) {
+			return false;
+		}
+		cnt++;
+		clickCnt.put(player, cnt);
+		return true;
+	}
+}
 
 public abstract class AEBaseContainer extends Container
 {
@@ -96,6 +123,8 @@ public abstract class AEBaseContainer extends Container
 	private boolean sentCustomName;
 	private int ticksSinceCheck = 900;
 	private IAEItemStack clientRequestedTargetItem = null;
+
+	private final ClickLimitor clickLimitor = new ClickLimitor();
 
 	public AEBaseContainer( final InventoryPlayer ip, final TileEntity myTile, final IPart myPart )
 	{
@@ -667,8 +696,11 @@ public abstract class AEBaseContainer extends Container
 					case CRAFT_SHIFT:
 					case CRAFT_ITEM:
 					case CRAFT_STACK:
-						( (SlotCraftingTerm) s ).doClick( action, player );
-						this.updateHeld( player );
+						Boolean canClick = clickLimitor.tryDoClick(player);
+						if (canClick) {
+							( (SlotCraftingTerm) s ).doClick( action, player );
+							this.updateHeld( player );
+						}
 					default:
 				}
 			}

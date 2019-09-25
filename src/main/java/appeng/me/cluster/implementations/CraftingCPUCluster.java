@@ -575,7 +575,7 @@ public final class CraftingCPUCluster implements IAECluster, ICraftingCPU
 
 	public void updateCraftingLogic( final IGrid grid, final IEnergyGrid eg, final CraftingGridCache cc )
 	{
-		if( !this.getCore().isActive() )
+		if( !this.isActive() )
 		{
 			return;
 		}

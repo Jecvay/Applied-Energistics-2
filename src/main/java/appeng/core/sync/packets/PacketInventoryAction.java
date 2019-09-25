@@ -20,6 +20,8 @@ package appeng.core.sync.packets;
 
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.HashMap;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -40,6 +42,8 @@ import appeng.core.sync.network.INetworkInfo;
 import appeng.helpers.InventoryAction;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
+
+
 
 
 public class PacketInventoryAction extends AppEngPacket
@@ -152,7 +156,7 @@ public class PacketInventoryAction extends AppEngPacket
 			}
 			else
 			{
-				baseContainer.doAction( sender, this.action, this.slot, this.id );
+				baseContainer.doAction(sender, this.action, this.slot, this.id);
 			}
 		}
 	}
