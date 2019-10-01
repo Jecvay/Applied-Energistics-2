@@ -82,7 +82,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 class ClickLimitor {
-	private ClickLimitor clickLimitor;
+	static private ClickLimitor clickLimitor;
 	private Map<EntityPlayerMP, Integer> clickCnt = new HashMap<>();
 	private Map<EntityPlayerMP, Long> lastClickTime = new HashMap<>();
 
