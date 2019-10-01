@@ -82,11 +82,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 class ClickLimitor {
+	private ClickLimitor clickLimitor;
 	private Map<EntityPlayerMP, Integer> clickCnt = new HashMap<>();
 	private Map<EntityPlayerMP, Long> lastClickTime = new HashMap<>();
 
-	public ClickLimitor() {
+	private ClickLimitor() {
+		clickLimitor = null;
+	}
 
+	static public ClickLimitor getInstance() {
+		if (clickLimitor == null) {
+			clickLimitor = new ClickLimitor();
+		}
+		return clickLimitor;
 	}
 
 	public Boolean tryDoClick(EntityPlayerMP player) {
@@ -123,8 +131,6 @@ public abstract class AEBaseContainer extends Container
 	private boolean sentCustomName;
 	private int ticksSinceCheck = 900;
 	private IAEItemStack clientRequestedTargetItem = null;
-
-	private final ClickLimitor clickLimitor = new ClickLimitor();
 
 	public AEBaseContainer( final InventoryPlayer ip, final TileEntity myTile, final IPart myPart )
 	{
@@ -696,7 +702,7 @@ public abstract class AEBaseContainer extends Container
 					case CRAFT_SHIFT:
 					case CRAFT_ITEM:
 					case CRAFT_STACK:
-						Boolean canClick = clickLimitor.tryDoClick(player);
+						Boolean canClick = ClickLimitor.getInstance().tryDoClick(player);
 						if (canClick) {
 							( (SlotCraftingTerm) s ).doClick( action, player );
 							this.updateHeld( player );
