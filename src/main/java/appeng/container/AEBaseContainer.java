@@ -83,25 +83,25 @@ import java.util.Map;
 
 class ClickLimitor {
 	static private ClickLimitor clickLimitor;
-	private Map<EntityPlayerMP, Integer> clickCnt;
+
+	private Map<EntityPlayerMP, Long> clickCnt;
 	private Map<EntityPlayerMP, Long> lastClickTime;
 
 	private ClickLimitor() {
-		clickLimitor = null;
+		clickCnt = new HashMap<>();
+		lastClickTime = new HashMap<>();
 	}
 
 	static public ClickLimitor getInstance() {
 		if (clickLimitor == null) {
 			clickLimitor = new ClickLimitor();
-			clickLimitor.clickCnt = new HashMap<>();
-			clickLimitor.lastClickTime = new HashMap<>();
 		}
 		return clickLimitor;
 	}
 
 	public Boolean tryDoClick(EntityPlayerMP player) {
-		long lastTime = lastClickTime.get(player);
-		int cnt = clickCnt.get(player);
+		long lastTime = lastClickTime.getOrDefault(player, 0L);
+		long cnt = clickCnt.getOrDefault(player, 0L);
 		long timeNow = System.currentTimeMillis();
 		if (timeNow - lastTime > 5000) {
 			lastClickTime.put(player, timeNow);
